@@ -92,7 +92,6 @@ version = "0.1.0"
 dependencies = [
  "base64",
  "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -112,6 +111,7 @@ dependencies = [
 name = "cosmwasm-vm-wasmi"
 version = "0.1.0"
 dependencies = [
+ "base64",
  "cosmwasm-crypto",
  "cosmwasm-minimal-std",
  "cosmwasm-vm",

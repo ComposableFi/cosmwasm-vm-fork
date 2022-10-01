@@ -7,12 +7,14 @@ use core::{assert_matches::assert_matches, num::NonZeroU32, str::FromStr};
 use cosmwasm_minimal_std::Order;
 use cosmwasm_minimal_std::{
     Addr, Attribute, Binary, BlockInfo, Coin, ContractInfo, CosmwasmExecutionResult,
-    CosmwasmQueryResult, Empty, Env, Event, InstantiateResult, MessageInfo, QueryResult, Timestamp,
+    CosmwasmQueryResult, Empty, Env, Event, InstantiateResult, MessageInfo, QueryRequest,
+    QueryResult, Timestamp, WasmQuery,
 };
 use cosmwasm_vm::{
     executor::{cosmwasm_call, ExecuteInput, InstantiateInput, MigrateInput, QueryInput},
     system::{
-        cosmwasm_system_entrypoint, cosmwasm_system_run, CosmwasmCodeId, CosmwasmContractMeta,
+        cosmwasm_system_entrypoint, cosmwasm_system_query, cosmwasm_system_run, CosmwasmCodeId,
+        CosmwasmContractMeta,
     },
 };
 use std::error::Error;
@@ -126,14 +128,8 @@ impl Gas {
         let parent = self.current_mut();
         *parent += child;
     }
-    fn charge(&mut self, value: u64) -> Result<(), SimpleVMError> {
-        let current = self.current_mut();
-        if *current >= value {
-            *current -= value;
-            Ok(())
-        } else {
-            Err(SimpleVMError::OutOfGas)
-        }
+    fn charge(&mut self, _value: u64) -> Result<(), SimpleVMError> {
+        Ok(())
     }
 }
 
@@ -1118,5 +1114,126 @@ fn test_reply() {
         for attr in attributes {
             assert!(events.iter().any(|e| e.attributes.contains(&attr)));
         }
+    }
+}
+
+#[test]
+fn test_workshop() {
+    let code = instrument_contract(include_bytes!("../../fixtures/cosmwasmception.wasm"));
+    let code_cw20 = instrument_contract(include_bytes!("../../fixtures/cw20_base.wasm"));
+    let sender = BankAccount(100);
+    let address = BankAccount(10_000);
+    let funds = vec![];
+    let mut extension = SimpleWasmiVMExtension {
+        storage: Default::default(),
+        codes: BTreeMap::from([(0x1337, code)]),
+        contracts: BTreeMap::from([(
+            address,
+            CosmwasmContractMeta {
+                code_id: 0x1337,
+                admin: None,
+                label: "".into(),
+            },
+        )]),
+        next_account_id: BankAccount(10_001),
+        transaction_depth: 0,
+        gas: Gas::new(100_000_000),
+    };
+    {
+        let mut vm = create_simple_vm(
+            sender,
+            address,
+            funds,
+            &extension
+                .codes
+                .get(&extension.contracts.get(&address).unwrap().code_id)
+                .cloned()
+                .unwrap(),
+            &mut extension,
+        );
+
+        let msg = format!(
+            r#"
+            {{
+                "contracts": [
+                    {{
+                        "code": {:?},
+                        "address": "10000",
+                        "code_id": 1
+                    }}
+                ], 
+                "next_account_id": "10001", 
+                "gas": 18446744073709551615
+            }}"#,
+            code_cw20
+        );
+        let _ = cosmwasm_system_entrypoint::<InstantiateInput, _>(&mut vm, msg.as_bytes()).unwrap();
+
+        let instantiate_msg = r#"{
+                            "name": "Picasso",
+                            "symbol": "PICA",
+                            "decimals": 12,
+                            "initial_balances": [],
+                            "mint": {
+                                "minter": "100",
+                                "cap": null
+                            },
+                            "marketing": null
+                        }"#;
+
+        let msg = format!(
+            r#"{{
+                    "instantiate": {{
+                        "sender": "100",
+                        "code_id": 1,
+                        "instantiate_msg": {:?}
+                    }}
+                }}"#,
+            instantiate_msg.as_bytes()
+        );
+        log::info!("Instantiate MSG: {}", msg);
+        let _ = cosmwasm_system_entrypoint::<ExecuteInput, WasmiVM<SimpleWasmiVM>>(
+            &mut vm,
+            msg.as_bytes(),
+        )
+        .unwrap();
+
+        let submsg = r#"{
+            "token_info": {}
+        }"#;
+
+        let msg = format!(
+            r#"{{
+            "query": {{
+                "sender": "100",
+                "contract_address": "10000",
+                "request": {{
+                    "wasm": {{
+                        "smart": {{
+                            "contract_addr": "10000",
+                            "msg": "{}"
+                        }}
+                    }}
+                }}
+            }}
+         }}"#,
+            base64::encode(submsg.as_bytes())
+        );
+
+        log::info!("Query Message: {}", msg);
+
+        let request = WasmQuery::Smart {
+            contract_addr: String::from("10000"),
+            msg: Binary(msg.into()),
+        };
+
+        let response = cosmwasm_system_query::<_>(&mut vm, QueryRequest::Wasm(request))
+            .unwrap()
+            .into_result()
+            .unwrap()
+            .into_result()
+            .unwrap();
+
+        log::info!("Query response: {}", String::from_utf8_lossy(&response.0));
     }
 }

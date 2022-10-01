@@ -180,7 +180,7 @@ pub mod constants {
     /// memory)
     pub const MAX_LENGTH_DB_KEY: usize = 64 * KI;
     /// Max value length for db_write (when VM reads the value argument from Wasm memory)
-    pub const MAX_LENGTH_DB_VALUE: usize = 128 * KI;
+    pub const MAX_LENGTH_DB_VALUE: usize = 256 * MI;
     /// Typically 20 (Cosmos SDK, Ethereum), 32 (Nano, Substrate) or 54 (MockApi)
     pub const MAX_LENGTH_CANONICAL_ADDRESS: usize = 64;
     /// The max length of human address inputs (in bytes).
