@@ -10,7 +10,7 @@ export type StorageKey = Array<number>;
 export type StorageValue = Array<number>;
 export type StorageIterator = number;
 
-export type VM = {
+export type VMHost = {
   // Environment
   info: () => MessageInfo,
   env: () => Env,
@@ -38,7 +38,7 @@ export type VM = {
 
   // Database
   db_write: (key: StorageKey, value: StorageValue) => Result<Unit, Error>,
-  db_read: (key: StorageKey) => Result<StorageValue, Error>,
+  db_read: (key: StorageKey) => Result<Option<StorageValue>, Error>,
   db_remove: (key: StorageKey) => Result<Unit, Error>,
   db_scan: (start: Option<StorageKey>, end: Option<StorageKey>, order: Order) => Result<StorageIterator, Error>,
   db_next: (iterator_id: StorageIterator) => Result<[StorageKey, StorageValue], Error>,
@@ -64,23 +64,23 @@ export type VM = {
   // TODO: crypto functions
 }
 
-export const vmInstantiate = <T>(host: VM, code: Uint8Array, message: T): Result<VMStep, Error> =>
+export const vmInstantiate = <T>(host: VMHost, code: Uint8Array, message: T): Result<VMStep, Error> =>
   vm_instantiate(host, code, JSON.stringify(message));
 
-export const vmExecute = <T>(host: VM, code: Uint8Array, message: T): Result<VMStep, Error> =>
+export const vmExecute = <T>(host: VMHost, code: Uint8Array, message: T): Result<VMStep, Error> =>
   vm_execute(host, code, JSON.stringify(message));
 
-export const vmMigrate = <T>(host: VM, code: Uint8Array, message: T): Result<VMStep, Error> =>
+export const vmMigrate = <T>(host: VMHost, code: Uint8Array, message: T): Result<VMStep, Error> =>
   vm_migrate(host, code, JSON.stringify(message));
 
-export const vmContinueInstantiate = <T>(host: VM, code: Uint8Array, message: T, event_handler: any): Result<Option<Binary>, Error> =>
+export const vmContinueInstantiate = <T>(host: VMHost, code: Uint8Array, message: T, event_handler: any): Result<Option<Binary>, Error> =>
   vm_continue_instantiate(host, code, JSON.stringify(message), event_handler);
 
-export const vmContinueExecute = <T>(host: VM, code: Uint8Array, message: T, event_handler: any): Result<Option<Binary>, Error> =>
+export const vmContinueExecute = <T>(host: VMHost, code: Uint8Array, message: T, event_handler: any): Result<Option<Binary>, Error> =>
   vm_continue_execute(host, code, JSON.stringify(message), event_handler);
 
-export const vmContinueMigrate = <T>(host: VM, code: Uint8Array, message: T, event_handler: any): Result<Option<Binary>, Error> =>
+export const vmContinueMigrate = <T>(host: VMHost, code: Uint8Array, message: T, event_handler: any): Result<Option<Binary>, Error> =>
   vm_continue_migrate(host, code, JSON.stringify(message), event_handler);
 
-export const vmQuery = <T>(host: VM, code: Uint8Array, query: T): Result<Result<Result<Binary, Error>, Error>, Error> =>
+export const vmQuery = <T>(host: VMHost, code: Uint8Array, query: T): Result<Result<Result<Binary, Error>, Error>, Error> =>
   vm_query(host, code, JSON.stringify(query));
