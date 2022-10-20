@@ -25,7 +25,10 @@
       in with pkgs;
       let
         # Nightly rust used for wasm runtime compilation
-        rust-nightly = rust-bin.nightly.latest.default;
+        rust-nightly = rust-bin.nightly.latest.default.override {
+          extensions = [ "rust-src" "rust-analyzer" ];
+          targets = [ "wasm32-unknown-unknown" ];
+        };
 
         # Crane lib instantiated with current nixpkgs
         crane-lib = crane.mkLib pkgs;
@@ -49,14 +52,13 @@
         # Common dependencies used for caching
         common-deps = crane-nightly.buildDepsOnly common-args;
 
-        common-cached-args = common-args // {
-          cargoArtifacts = common-deps;
-        };
+        common-cached-args = common-args // { cargoArtifacts = common-deps; };
 
       in rec {
-        packages.cosmwasm-vm = crane-nightly.buildPackage (common-cached-args // {
-          cargoTestCommand = "cargo test --features iterator";
-        });
+        packages.cosmwasm-vm = crane-nightly.buildPackage (common-cached-args
+          // {
+            cargoTestCommand = "cargo test --features iterator";
+          });
         packages.default = packages.cosmwasm-vm;
         checks = {
           package = packages.default;
@@ -66,7 +68,14 @@
           fmt = crane-nightly.cargoFmt common-args;
         };
         devShell = mkShell {
-          buildInputs = [ rust-nightly ];
+          buildInputs = [
+            rust-nightly
+            wasm-pack
+            wasm-bindgen-cli
+            openssl.dev
+            pkg-config
+            nodejs-18_x
+          ];
         };
       });
 }
