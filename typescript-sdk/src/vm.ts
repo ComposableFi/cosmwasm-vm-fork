@@ -1,5 +1,5 @@
 import { Binary, Coin, ContractInfoResponse, ContractMeta, CosmWasmEvent, Env, MessageInfo, Option, Order, Result, Unit } from "./common"
-import { vm_query, vm_instantiate, vm_execute, vm_migrate, vm_continue_instantiate, vm_continue_execute, vm_continue_migrate } from "../../typescript-bindings/pkg/typescript_bindings";
+import { vm_query, vm_instantiate, vm_execute, vm_migrate, vm_continue_instantiate, vm_continue_execute, vm_continue_migrate } from "./pkg/typescript_bindings";
 
 export type VMStep = {
   data: Option<Binary>,
