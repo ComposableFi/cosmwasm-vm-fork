@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "description": "Composable CosmWasm VM TypeScript SDK",
     "source": [
-        "src/index.ts",
         "src/typescript_bindings.js"
     ],
     "type": "module",
@@ -18,7 +17,6 @@
         }
     },
     "main": [
-        "dist2/index.js",
         "dist2/typescript_bindings.js"
     ],
     "author": "",
