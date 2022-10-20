@@ -9,6 +9,7 @@
         "watch": "parcel watch",
         "build": "parcel build"
     },
+    "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "author": "",
     "license": "ISC",
@@ -22,6 +23,5 @@
         "@parcel/transformer-typescript-types": "^2.7.0",
         "@types/node": "^18.11.0",
         "parcel": "^2.7.0"
-    },
-    "browserslist": "> 0.5%, last 2 versions, not dead"
+    }
 }
