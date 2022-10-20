@@ -1,5 +1,6 @@
 import * as fs from "fs";
-import { ContractMeta, Coin, Ok, Err, None, encode, decode, toHex, toBinary, MessageInfo, Env, Addr, CodeId, Some, Unit, unit } from "./common";
+import { ContractMeta, Coin, MessageInfo, Env, Addr, CodeId } from "./common";
+import { Ok, Err, None, encode, decode, toHex, toBinary, Some, unit} from './commonMethods';
 import { vmInstantiate, vmExecute, vmContinueInstantiate, VMHost, StorageValue, vmSetup } from "./vm";
 
 type VMHostShared = {

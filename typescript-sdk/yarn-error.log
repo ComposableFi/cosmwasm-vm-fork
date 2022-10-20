@@ -1,0 +1,65 @@
+Arguments: 
+  /Users/joonw/.nvm/versions/node/v16.17.0/bin/node /Users/joonw/.nvm/versions/node/v16.17.0/bin/yarn build
+
+PATH: 
+  /Users/joonw/.nvm/versions/node/v16.17.0/bin:/opt/homebrew/opt/openssh/bin:/Users/joonw/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin:/Users/joonw/.cargo/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.17.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  SyntaxError: /Users/joonw/projects/cf/cosmwasm-vm/typescript-sdk/package.json: Unexpected token } in JSON at position 635
+      at JSON.parse (<anonymous>)
+      at /Users/joonw/.nvm/versions/node/v16.17.0/lib/node_modules/yarn/lib/cli.js:1629:59
+      at Generator.next (<anonymous>)
+      at step (/Users/joonw/.nvm/versions/node/v16.17.0/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /Users/joonw/.nvm/versions/node/v16.17.0/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+      "name": "cosmwasm-vm-ts",
+      "version": "1.0.0",
+      "description": "Composable CosmWasm VM TypeScript SDK",
+      "source": ["src/index.ts", "src/typescript_bindings.js"],
+      "type": "module",
+      "scripts": {
+          "test": "node --experimental-specifier-resolution=node --experimental-fetch --loader ts-node/esm src/test.ts",
+          "watch": "parcel watch",
+          "build": "rm -rf dist && rm -rf .parcel-cache && parcel build --no-cache"
+      },
+      "targets": {
+          "default": {
+              "distDir": "./dist"
+          },
+          "types": {
+              "source": ["src/common.ts", "typescript_bindings.d.ts"],
+          }
+      },
+      "main": ["dist/index.js", "dist/typescript_bindings.js"],
+      "types": ["dist/common.ts","dist/typesciprt_bindings.d.ts"],
+      "author": "",
+      "license": "ISC",
+      "dependencies": {
+          "buffer": "^6.0.3",
+          "ts-node": "^10.9.1",
+          "typescript": "^4.7.4"
+      },
+      "devDependencies": {
+          "@parcel/packager-ts": "^2.7.0",
+          "@parcel/transformer-typescript-types": "^2.7.0",
+          "@types/node": "^18.11.0",
+          "parcel": "^2.7.0"
+      }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

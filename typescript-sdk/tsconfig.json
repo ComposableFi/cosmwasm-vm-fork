@@ -16,4 +16,8 @@
     "ts-node": {
         "esm": true
     },
+    "parcel-plugin-typescript": {
+        // If true type-checking is disabled
+        "transpileOnly": false
+    },
 }
