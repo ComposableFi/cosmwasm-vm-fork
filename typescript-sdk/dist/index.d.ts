@@ -119,4 +119,4 @@ export const vmContinueMigrate: <T>(host: VMHost, code: Uint8Array, message: T, 
 export const vmQuery: <T>(host: VMHost, code: Uint8Array, query: T) => Result<Result<Result<Binary, Error>, Error>, Error>;
 export * from './typescript_bindings';
 
-//# sourceMappingURL=types.d.ts.map
+//# sourceMappingURL=index.d.ts.map

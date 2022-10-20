@@ -1,5 +1,6 @@
 // TODO: probably worth using schemars with original cosmwasm std to export all this types
-
+import browserBuffer from 'buffer/index';
+const Buffer = browserBuffer.Buffer;
 export type CosmWasmAttribute = {
   key: string,
   value: string,
