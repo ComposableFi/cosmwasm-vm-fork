@@ -1,74 +1,64 @@
 import { InitOutput, InitInput } from "./typescript_bindings";
-export type CosmWasmAttribute = {
+type CosmWasmAttribute = {
     key: string;
     value: string;
 };
-export type CosmWasmEvent = {
+type CosmWasmEvent = {
     "type": string;
     attributes: Array<CosmWasmAttribute>;
 };
-export type CodeId = number;
-export type Binary = string;
-export const toBinary: (value: string) => Binary;
-export const fromBinary: (value: Binary) => string;
-export type Error = string;
-export type Unit = null;
-export type Addr = string;
-export type Order = {
+type Binary = string;
+type Unit = null;
+type Addr = string;
+type Order = {
     ascending: null;
 } | {
     descending: null;
 };
-export type ContractInfoResponse = {
+type ContractInfoResponse = {
     code_id: number;
     creator: string;
     admin: Option<string>;
     pinned: boolean;
     ibc_port: Option<string>;
 };
-export type ContractMeta = {
+type ContractMeta = {
     code_id: number;
     admin: Option<string>;
     label: string;
 };
-export type Coin = {
+type Coin = {
     denom: String;
     amount: String;
 };
-export type MessageInfo = {
+type MessageInfo = {
     sender: Addr;
     funds: Array<Coin>;
 };
-export type BlockInfo = {
+type BlockInfo = {
     height: number;
     time: string;
     chain_id: string;
 };
-export type TransactionInfo = {
+type TransactionInfo = {
     index: number;
 };
-export type ContractInfo = {
+type ContractInfo = {
     address: Addr;
 };
-export type Env = {
+type Env = {
     block: BlockInfo;
     transaction: Option<TransactionInfo>;
     contract: ContractInfo;
 };
-export type Option<T> = null | undefined | T;
-export const Some: <T>(value: T) => Option<T>;
-export const None: <T>() => Option<T>;
-export type Result<T, U> = {
+type Option<T> = null | undefined | T;
+type Result<T, U> = {
     Ok: T;
 } | {
     Err: U;
 };
-export const Ok: <T, U>(value: T) => Result<T, U>;
-export const Err: <T, U>(value: U) => Result<T, U>;
-export const unit: Unit;
-export const decode: (value: number[]) => string;
-export const encode: (value: object) => number[];
-export const toHex: (byteArray: number[]) => string;
+declare const Ok: <T, U>(value: T) => Result<T, U>;
+declare const Err: <T, U>(value: U) => Result<T, U>;
 export type VMStep = {
     data: Option<Binary>;
     events: Array<CosmWasmEvent>;

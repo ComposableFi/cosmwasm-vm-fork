@@ -1,5 +1,3 @@
-import $hgUW1$bufferindex from "buffer/index";
-
 function $parcel$export(e, n, v, s) {
   Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
 }
@@ -707,40 +705,8 @@ const $0be2f2a11bcce2c0$export$699106420ce4b976 = (host, code, message, event_ha
 const $0be2f2a11bcce2c0$export$6617c1e71955a2e1 = (host, code, query)=>(0, $851cfc7b9145f23b$export$e6ce27f0a3a0f8fa)(host, code, JSON.stringify(query));
 
 
-var $ee723407fc634988$exports = {};
-
-$parcel$export($ee723407fc634988$exports, "toBinary", () => $ee723407fc634988$export$ee892b06e1166e2f);
-$parcel$export($ee723407fc634988$exports, "fromBinary", () => $ee723407fc634988$export$a178423dcbaef037);
-$parcel$export($ee723407fc634988$exports, "Some", () => $ee723407fc634988$export$9f9d0139d032da4f);
-$parcel$export($ee723407fc634988$exports, "None", () => $ee723407fc634988$export$57ca7e07b341709d);
-$parcel$export($ee723407fc634988$exports, "Ok", () => $ee723407fc634988$export$8146e38189b4f4dc);
-$parcel$export($ee723407fc634988$exports, "Err", () => $ee723407fc634988$export$3659d3f2d3dfceb8);
-$parcel$export($ee723407fc634988$exports, "unit", () => $ee723407fc634988$export$523c0b569236b342);
-$parcel$export($ee723407fc634988$exports, "decode", () => $ee723407fc634988$export$2f872c0f2117be69);
-$parcel$export($ee723407fc634988$exports, "encode", () => $ee723407fc634988$export$c564cdbbe6da493);
-$parcel$export($ee723407fc634988$exports, "toHex", () => $ee723407fc634988$export$7ea66e3774a60b67);
-
-const $ee723407fc634988$var$Buffer = (0, $hgUW1$bufferindex).Buffer;
-const $ee723407fc634988$export$ee892b06e1166e2f = (value)=>$ee723407fc634988$var$Buffer.from(value).toString("base64");
-const $ee723407fc634988$export$a178423dcbaef037 = (value)=>$ee723407fc634988$var$Buffer.from(value, "base64").toString();
-const $ee723407fc634988$export$9f9d0139d032da4f = (value)=>value;
-const $ee723407fc634988$export$57ca7e07b341709d = ()=>null;
-const $ee723407fc634988$export$8146e38189b4f4dc = (value)=>({
-        Ok: value
-    });
-const $ee723407fc634988$export$3659d3f2d3dfceb8 = (value)=>({
-        Err: value
-    });
-const $ee723407fc634988$export$523c0b569236b342 = null;
-const $ee723407fc634988$export$2f872c0f2117be69 = (value)=>String.fromCharCode(...value);
-const $ee723407fc634988$export$c564cdbbe6da493 = (value)=>JSON.stringify(value).split("").map((c)=>c.charCodeAt(0));
-const $ee723407fc634988$export$7ea66e3774a60b67 = (byteArray)=>Array.from(byteArray, function(byte) {
-        return ("0" + (byte & 0xFF).toString(16)).slice(-2);
-    }).join("");
 
 
 
-
-
-export {$0be2f2a11bcce2c0$export$75de4951c04567a6 as vmSetup, $0be2f2a11bcce2c0$export$cfb7a04f4bc7b9fb as vmInstantiate, $0be2f2a11bcce2c0$export$8ad1ca901921ae38 as vmExecute, $0be2f2a11bcce2c0$export$61bd1515aa5b8ebc as vmMigrate, $0be2f2a11bcce2c0$export$6f25983a79c1573f as vmContinueInstantiate, $0be2f2a11bcce2c0$export$717645e2104c9250 as vmContinueExecute, $0be2f2a11bcce2c0$export$699106420ce4b976 as vmContinueMigrate, $0be2f2a11bcce2c0$export$6617c1e71955a2e1 as vmQuery, $ee723407fc634988$export$ee892b06e1166e2f as toBinary, $ee723407fc634988$export$a178423dcbaef037 as fromBinary, $ee723407fc634988$export$9f9d0139d032da4f as Some, $ee723407fc634988$export$57ca7e07b341709d as None, $ee723407fc634988$export$8146e38189b4f4dc as Ok, $ee723407fc634988$export$3659d3f2d3dfceb8 as Err, $ee723407fc634988$export$523c0b569236b342 as unit, $ee723407fc634988$export$2f872c0f2117be69 as decode, $ee723407fc634988$export$c564cdbbe6da493 as encode, $ee723407fc634988$export$7ea66e3774a60b67 as toHex, $851cfc7b9145f23b$export$143dee580f10c36a as vm_instantiate, $851cfc7b9145f23b$export$24468e70075100c3 as vm_execute, $851cfc7b9145f23b$export$7050f2a4bc5068c4 as vm_migrate, $851cfc7b9145f23b$export$792daa7c52424572 as vm_continue_instantiate, $851cfc7b9145f23b$export$b247350223035db8 as vm_continue_execute, $851cfc7b9145f23b$export$5dc1f617a095fb2d as vm_continue_migrate, $851cfc7b9145f23b$export$e6ce27f0a3a0f8fa as vm_query, $851cfc7b9145f23b$export$2ec80ee76a9348bf as initSync};
+export {$0be2f2a11bcce2c0$export$75de4951c04567a6 as vmSetup, $0be2f2a11bcce2c0$export$cfb7a04f4bc7b9fb as vmInstantiate, $0be2f2a11bcce2c0$export$8ad1ca901921ae38 as vmExecute, $0be2f2a11bcce2c0$export$61bd1515aa5b8ebc as vmMigrate, $0be2f2a11bcce2c0$export$6f25983a79c1573f as vmContinueInstantiate, $0be2f2a11bcce2c0$export$717645e2104c9250 as vmContinueExecute, $0be2f2a11bcce2c0$export$699106420ce4b976 as vmContinueMigrate, $0be2f2a11bcce2c0$export$6617c1e71955a2e1 as vmQuery, $851cfc7b9145f23b$export$143dee580f10c36a as vm_instantiate, $851cfc7b9145f23b$export$24468e70075100c3 as vm_execute, $851cfc7b9145f23b$export$7050f2a4bc5068c4 as vm_migrate, $851cfc7b9145f23b$export$792daa7c52424572 as vm_continue_instantiate, $851cfc7b9145f23b$export$b247350223035db8 as vm_continue_execute, $851cfc7b9145f23b$export$5dc1f617a095fb2d as vm_continue_migrate, $851cfc7b9145f23b$export$e6ce27f0a3a0f8fa as vm_query, $851cfc7b9145f23b$export$2ec80ee76a9348bf as initSync};
 //# sourceMappingURL=index.js.map
