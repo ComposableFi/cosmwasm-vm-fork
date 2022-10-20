@@ -1,0 +1,12 @@
+{
+  "name": "typescript-bindings",
+  "version": "0.1.0",
+  "files": [
+    "typescript_bindings_bg.wasm",
+    "typescript_bindings.js",
+    "typescript_bindings.d.ts"
+  ],
+  "module": "typescript_bindings.js",
+  "types": "typescript_bindings.d.ts",
+  "sideEffects": false
+}
