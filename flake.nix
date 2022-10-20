@@ -67,6 +67,6 @@
           });
           fmt = crane-nightly.cargoFmt common-args;
         };
-        devShell = mkShell { buildInputs = [ rust-nightly wasm-pack openssl.dev pkg-config nodejs nodePackages.ts-node ]; };
+        devShell = mkShell { buildInputs = [ rust-nightly wasm-pack openssl.dev pkg-config nodejs-18_x ]; };
       });
 }

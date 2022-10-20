@@ -1,5 +1,5 @@
 import { Binary, Coin, ContractInfoResponse, ContractMeta, CosmWasmEvent, Env, MessageInfo, Option, Order, Result, Unit } from "./common"
-import { vm_query, vm_instantiate, vm_execute, vm_migrate, vm_continue_instantiate, vm_continue_execute, vm_continue_migrate } from "./pkg/typescript_bindings";
+import init, { vm_query, vm_instantiate, vm_execute, vm_migrate, vm_continue_instantiate, vm_continue_execute, vm_continue_migrate, InitOutput, InitInput } from "./pkg/typescript_bindings";
 
 export type VMStep = {
   data: Option<Binary>,
@@ -63,6 +63,9 @@ export type VMHost = {
 
   // TODO: crypto functions
 }
+
+export const vmSetup = (module_or_path?: InitInput | Promise<InitInput>): Promise<InitOutput> =>
+  init(module_or_path);
 
 export const vmInstantiate = <T>(host: VMHost, code: Uint8Array, message: T): Result<VMStep, Error> =>
   vm_instantiate(host, code, JSON.stringify(message));

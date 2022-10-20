@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "Composable CosmWasm VM TypeScript SDK",
     "main": "index.ts",
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
-        "test": "ts-node src/test.ts"
+        "test": "node --experimental-specifier-resolution=node --experimental-fetch --loader ts-node/esm src/test.ts"
     },
     "author": "",
     "license": "ISC",

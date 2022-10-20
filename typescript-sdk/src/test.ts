@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import { ContractMeta, Coin, Ok, Err, None, encode, decode, toHex, toBinary, MessageInfo, Env, Addr, CodeId, Some } from "./common";
-import { vmInstantiate, vmExecute, vmContinueInstantiate, VMHost, StorageValue } from "./vm";
+import { ContractMeta, Coin, Ok, Err, None, encode, decode, toHex, toBinary, MessageInfo, Env, Addr, CodeId, Some, Unit, unit } from "./common";
+import { vmInstantiate, vmExecute, vmContinueInstantiate, VMHost, StorageValue, vmSetup } from "./vm";
 
 type VMHostShared = {
   storage: Map<Addr, Map<String, Object>>,
@@ -10,15 +10,15 @@ type VMHostShared = {
 };
 
 const createVM = (info: MessageInfo, env: Env, metadata: ContractMeta, shared: VMHostShared): Partial<VMHost> => {
-  const getStore = (address: string) => {
+  const getStore = (address: string): Map<String, Object> => {
     if (shared.storage.has(address)) {
-      return shared.storage.get(address);
+      return shared.storage.get(address)!;
     }
     else {
       return new Map<String, Object>();
     }
   };
-  const newContractAddress = () => ++shared.nextAccountId;
+  const newContractAddress = (): number => ++shared.nextAccountId;
   const setMetadata = (address: string, metadata: ContractMeta) => {
     shared.contracts.set(address, metadata);
   };
@@ -26,33 +26,33 @@ const createVM = (info: MessageInfo, env: Env, metadata: ContractMeta, shared: V
     info: () => info,
     env: () => env,
     transaction_begin: () => {
-      return Ok(None());
+      return Ok(unit);
     },
     transaction_rollback: () => {
-      return Ok(None());
+      return Ok(unit);
     },
     transaction_commit: () => {
-      return Ok(None());
+      return Ok(unit);
     },
     charge: (_value: object) => {
-      return Ok(None());
+      return Ok(unit);
     },
-    gas_checkpoint_push: () => Ok(None()),
-    gas_checkpoint_pop: () => Ok(None()),
+    gas_checkpoint_push: () => Ok(unit),
+    gas_checkpoint_pop: () => Ok(unit),
     addr_validate: (_input: string) => {
-      return Ok(Ok(None()));
+      return Ok(Ok(unit));
     },
     db_write: (key: Array<number>, value: Array<number>) => {
       const store = getStore(env.contract.address);
       store.set(toHex(key), JSON.parse(decode(value)));
       shared.storage.set(env.contract.address, store);
-      return Ok(None());
+      return Ok(unit);
     },
     db_read: (key: Array<number>) => {
       const store = getStore(env.contract.address);
       const entryKey = toHex(key);
       if (store.has(entryKey)) {
-        return Ok(Some<StorageValue>(encode(store.get(entryKey))));
+        return Ok(Some<StorageValue>(encode(store.get(entryKey)!)));
       }
       else {
         return Ok(None<StorageValue>());
@@ -75,14 +75,14 @@ const createVM = (info: MessageInfo, env: Env, metadata: ContractMeta, shared: V
       };
       const subVM = createVM(newInfo, newEnv, newContractMeta, shared);
       // TODO: check existence of code
-      const code = shared.codes.get(newContractMeta.code_id);
+      const code = shared.codes.get(newContractMeta.code_id)!;
       // TODO: normally we reload a new host with the new meta for the newly running contract, we update the env to reflect sender/funds
       const result = vmContinueInstantiate(<VMHost>subVM, code, JSON.parse(decode(message)), event_handler);
       if ("Ok" in result) {
         // new contract address and result of instantiate call
-        return Ok([newAccountId.toString(), result.Ok]);
+        return Ok([newAccountId.toString(), result.Ok!]);
       }
-      else if (result.Err) {
+      else {
         return Err(result.Err);
       }
     }
@@ -90,6 +90,8 @@ const createVM = (info: MessageInfo, env: Env, metadata: ContractMeta, shared: V
 };
 
 const main = async () => {
+  await vmSetup();
+
   const code = new Uint8Array(fs.readFileSync("./reflect.wasm"));
   const senderAddress = 0;
   const senderFunds: Array<Coin> = [];

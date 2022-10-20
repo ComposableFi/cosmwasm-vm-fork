@@ -83,6 +83,8 @@ export const Err = <T, U>(value: U): Result<T, U> => ({
   Err: value
 });
 
+export const unit: Unit = null;
+
 export const decode = (value: number[]): string =>
   String.fromCharCode(...value)
 
