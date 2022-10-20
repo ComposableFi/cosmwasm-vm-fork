@@ -1,0 +1,11 @@
+import { Binary, Option, Unit, Result } from "./common";
+export declare const toBinary: (value: string) => Binary;
+export declare const fromBinary: (value: Binary) => string;
+export declare const Some: <T>(value: T) => T;
+export declare const None: <T>() => T;
+export declare const Ok: <T, U>(value: T) => Result<T, U>;
+export declare const Err: <T, U>(value: U) => Result<T, U>;
+export declare const unit: Unit;
+export declare const decode: (value: number[]) => string;
+export declare const encode: (value: object) => number[];
+export declare const toHex: (byteArray: number[]) => string;

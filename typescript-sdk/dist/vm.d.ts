@@ -1,0 +1,11 @@
+import { Binary, Option, Result } from "./common";
+import { VMHost, VMStep } from "./vm_types";
+import { InitOutput, InitInput } from './typescript_bindings';
+export declare const vmSetup: (module_or_path?: InitInput | Promise<InitInput>) => Promise<InitOutput>;
+export declare const vmInstantiate: <T>(host: VMHost, code: Uint8Array, message: T) => Result<VMStep, Error>;
+export declare const vmExecute: <T>(host: VMHost, code: Uint8Array, message: T) => Result<VMStep, Error>;
+export declare const vmMigrate: <T>(host: VMHost, code: Uint8Array, message: T) => Result<VMStep, Error>;
+export declare const vmContinueInstantiate: <T>(host: VMHost, code: Uint8Array, message: T, event_handler: any) => Result<Option<Binary>, Error>;
+export declare const vmContinueExecute: <T>(host: VMHost, code: Uint8Array, message: T, event_handler: any) => Result<Option<Binary>, Error>;
+export declare const vmContinueMigrate: <T>(host: VMHost, code: Uint8Array, message: T, event_handler: any) => Result<Option<Binary>, Error>;
+export declare const vmQuery: <T>(host: VMHost, code: Uint8Array, query: T) => Result<Result<Result<Binary, Error>, Error>, Error>;

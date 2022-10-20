@@ -10,15 +10,16 @@
     "scripts": {
         "test": "node --experimental-specifier-resolution=node --experimental-fetch --loader ts-node/esm src/test.ts",
         "watch": "parcel watch",
-        "build": "rm -rf dist && rm -rf .parcel-cache && parcel build --no-cache && cp src/index.d.ts dist/index.d.ts && cp src/typescript_bindings.d.ts dist/typescript_bindings.d.ts"
+        "build": "rm -rf dist2 && rm -rf .parcel-cache && parcel build --no-cache"
+    },
+    "targets": {
+        "default": {
+            "distDir": "dist2"
+        }
     },
     "main": [
-        "dist/index.js",
-        "dist/typescript_bindings.js"
-    ],
-    "types": [
-        "src/typescript_bindings.d.ts",
-        "src/common.ts"
+        "dist2/index.js",
+        "dist2/typescript_bindings.js"
     ],
     "author": "",
     "license": "ISC",
