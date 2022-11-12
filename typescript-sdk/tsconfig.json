@@ -1,10 +1,54 @@
 {
-    "compilerOptions": {
-        "target": "es2017",
-        "module": "commonjs",
-        "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "sourceMap": true
-    },
+  "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["node"],
+    "strict": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "moduleResolution": "Node16",
+    "declaration": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "useDefineForClassFields": true,
+    "noUncheckedIndexedAccess": true,
+    "importsNotUsedAsValues": "error",
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "useUnknownInCatchVariables": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noPropertyAccessFromIndexSignature": false
+  },
+  "include": [
+    "./lib",
+    "./package.json",
+    "./environment.d.ts",
+    "./lib/pkg/typescript_bindings_bg.wasm",
+    "./lib/pkg/typescript_bindings_bg.wasm.d.ts",
+    "./lib/pkg/typescript_bindings.d.ts",
+    "./lib/pkg/typescript_bindings_bg.wasm.d.ts"
+  ],
+  "exclude": ["./lib/pkg/_.ts"],
+  "ts-node": {
+    "esm": true,
+    "swc": true,
+    "skipIgnore": true,
+    "transpileOnly": true,
+    "experimentalResolver": true,
+    "experimentalReplAwait": true,
+    "experimentalSpecifierResolution": "node",
+    "require": ["tsconfig-paths/register"]
+  }
 }

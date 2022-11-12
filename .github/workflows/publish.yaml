@@ -1,0 +1,102 @@
+name: Publish TypeScript VM
+on:
+  push:
+  pull_request:
+
+env:
+  NODE_ENV: ci
+  ROOT_PATH: ${{ github.workspace }}
+
+jobs:
+  npm-publish:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.12.1]
+    steps:
+      - uses: actions/checkout@v3
+      - name: cd to typescript-sdk
+        run: cd typescript-sdk
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm build
+      - name: Copy WASM Files
+      - run: |
+          cp -R {{ $ROOT }}/typescript-sdk/lib/pkg/typescript_bindings_bg.wasm ./typescript-sdk/dist/lib/pkg/typescript_bindings_bg.wasm
+
+          cp -R ./typescript-sdk/lib/pkg/typescript_bindings_bg.wasm.d.ts ./typescript-sdk/dist/lib/pkg/typescript_bindings_bg.wasm.d.ts
+
+      - name: Update package.json version
+      # TODO: Better and stricter versioning approach
+        run: |
+          echo 'Updating package.json version'
+          npm version patch --no-git-tag-version --allow-same-version
+          cat package.json
+      - name: Publish to NPM
+        run: pnpm publish --no-git-checks
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # TODO: we can publish to both npm and github packages in the same job
+
+  github-publish:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.12.1]
+    steps:
+      - uses: actions/checkout@v3
+      - name: cd to typescript-sdk
+        run: |
+          cd typescript-sdk
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@composable'
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm build
+      - name: Copy WASM Files
+      - run: |
+          cp -R ./typescript-sdk/lib/pkg/typescript_bindings_bg.wasm ./typescript-sdk/dist/lib/pkg/typescript_bindings_bg.wasm
+
+          cp -R ./typescript-sdk/lib/pkg/typescript_bindings_bg.wasm.d.ts ./typescript-sdk/dist/lib/pkg/typescript_bindings_bg.wasm.d.ts
+
+      - name: Update package.json version
+      # TODO: Better and stricter versioning approach
+        run: |
+          echo 'Updating package.json version'
+          npm version patch --no-git-tag-version --allow-same-version
+          cat package.json
+      - name: Publish to NPM
+        run: pnpm publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

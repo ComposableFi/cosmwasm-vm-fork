@@ -1,0 +1,1 @@
+We probably shouldn't use this repo or npm package. This is for showing how to get the cosmwasm-vm-ts-sdk on npm. Some work needs to be done such as adding stricter types and using a tool like rollup / vite rsw.
