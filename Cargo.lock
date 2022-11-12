@@ -98,6 +98,18 @@ dependencies = [
 [[package]]
 name = "cosmwasm-crypto"
 version = "1.1.5"
+source = "git+https://github.com/ComposableFi/cosmwasm?rev=7d8a219266dc1ed587a54298942db03fa5dc528a#7d8a219266dc1ed587a54298942db03fa5dc528a"
+dependencies = [
+ "digest 0.10.5",
+ "ed25519-zebra",
+ "k256",
+ "rand_core 0.6.3",
+ "thiserror",
+]
+
+[[package]]
+name = "cosmwasm-crypto"
+version = "1.1.5"
 source = "git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906#abeae7f88dfce286d9d5831bbcc7fb1f138e6906"
 dependencies = [
  "digest 0.10.5",
@@ -119,7 +131,7 @@ dependencies = [
 [[package]]
 name = "cosmwasm-derive"
 version = "1.1.5"
-source = "git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906#abeae7f88dfce286d9d5831bbcc7fb1f138e6906"
+source = "git+https://github.com/ComposableFi/cosmwasm?rev=7d8a219266dc1ed587a54298942db03fa5dc528a#7d8a219266dc1ed587a54298942db03fa5dc528a"
 dependencies = [
  "syn",
 ]
@@ -170,15 +182,18 @@ dependencies = [
 [[package]]
 name = "cosmwasm-std"
 version = "1.1.5"
-source = "git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906#abeae7f88dfce286d9d5831bbcc7fb1f138e6906"
+source = "git+https://github.com/ComposableFi/cosmwasm?rev=7d8a219266dc1ed587a54298942db03fa5dc528a#7d8a219266dc1ed587a54298942db03fa5dc528a"
 dependencies = [
  "base64",
- "cosmwasm-crypto 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906)",
- "cosmwasm-derive 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906)",
+ "cosmwasm-crypto 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=7d8a219266dc1ed587a54298942db03fa5dc528a)",
+ "cosmwasm-derive 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=7d8a219266dc1ed587a54298942db03fa5dc528a)",
+ "derivative",
  "forward_ref",
  "hex",
+ "schemars",
  "serde",
  "serde-json-wasm",
+ "thiserror",
  "uint",
 ]
 
@@ -186,7 +201,7 @@ dependencies = [
 name = "cosmwasm-vm"
 version = "0.1.0"
 dependencies = [
- "cosmwasm-std 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906)",
+ "cosmwasm-std 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=7d8a219266dc1ed587a54298942db03fa5dc528a)",
  "either",
  "env_logger",
  "log",
@@ -200,7 +215,7 @@ name = "cosmwasm-vm-wasmi"
 version = "0.1.0"
 dependencies = [
  "cosmwasm-crypto 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906)",
- "cosmwasm-std 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=abeae7f88dfce286d9d5831bbcc7fb1f138e6906)",
+ "cosmwasm-std 1.1.5 (git+https://github.com/ComposableFi/cosmwasm?rev=7d8a219266dc1ed587a54298942db03fa5dc528a)",
  "cosmwasm-vm",
  "cw20-ics20",
  "either",

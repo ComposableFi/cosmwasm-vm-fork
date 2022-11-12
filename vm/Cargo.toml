@@ -15,7 +15,7 @@ serde_json = { version = "1", default-features = false, features = ["alloc"] }
 either = { version = "1.6", default-features = false }
 log = { version = "0.4", default-features = false }
 
-cosmwasm-std = { git = "https://github.com/ComposableFi/cosmwasm", rev = "abeae7f88dfce286d9d5831bbcc7fb1f138e6906", default-features = false }
+cosmwasm-std = { git = "https://github.com/ComposableFi/cosmwasm", rev = "7d8a219266dc1ed587a54298942db03fa5dc528a", features = ["no_std"]}
 
 [dev-dependencies]
 wat = "1.0"
