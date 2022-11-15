@@ -31,13 +31,12 @@ use crate::executor::ibc::{
     IbcChannelCloseInput, IbcChannelConnectInput, IbcPacketAckInput, IbcPacketReceiveInput,
     IbcPacketTimeoutInput,
 };
-#[cfg(feature = "stargate")]
-use crate::executor::AsFunctionName;
 use crate::{
     executor::{
-        cosmwasm_call, AllocateInput, CosmwasmCallInput, CosmwasmCallWithoutInfoInput,
-        CosmwasmQueryResult, DeallocateInput, DeserializeLimit, ExecuteInput, ExecutorError,
-        HasInfo, InstantiateInput, MigrateInput, QueryResult, ReadLimit, ReplyInput, Unit,
+        cosmwasm_call, AllocateInput, AsFunctionName, CosmwasmCallInput,
+        CosmwasmCallWithoutInfoInput, CosmwasmQueryResult, DeallocateInput, DeserializeLimit,
+        ExecuteInput, ExecutorError, HasInfo, InstantiateInput, MigrateInput, QueryResult,
+        ReadLimit, ReplyInput, Unit,
     },
     has::Has,
     input::{Input, OutputOf},
@@ -50,13 +49,13 @@ use crate::{
 };
 use alloc::{fmt::Display, format, string::String, vec, vec::Vec};
 use core::fmt::Debug;
-use cosmwasm_std::{
-    Addr, AllBalanceResponse, Attribute, BalanceResponse, BankMsg, BankQuery, Binary,
-    ContractResult, CosmosMsg, Env, Event, MessageInfo, QueryRequest, Reply, ReplyOn, Response,
-    SubMsg, SubMsgResponse, SubMsgResult, SystemResult, WasmMsg, WasmQuery,
-};
 #[cfg(feature = "stargate")]
-use cosmwasm_std::{Empty, IbcMsg};
+use cosmwasm_minimal_std::ibc::IbcMsg;
+use cosmwasm_minimal_std::{
+    Addr, AllBalanceResponse, Attribute, BalanceResponse, BankMsg, BankQuery, Binary,
+    ContractResult, CosmosMsg, Empty, Env, Event, MessageInfo, QueryRequest, Reply, ReplyOn,
+    Response, SubMsg, SubMsgResponse, SubMsgResult, SystemResult, WasmMsg, WasmQuery,
+};
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 
@@ -155,11 +154,9 @@ impl Display for SystemEventType {
 
 impl From<SystemEvent> for Event {
     fn from(sys_event: SystemEvent) -> Self {
-        Event::new(format!("{}", sys_event.ty)).add_attributes(
-            sys_event
-                .attributes
-                .into_iter()
-                .map(Into::<Attribute>::into),
+        Event::new(
+            format!("{}", sys_event.ty),
+            sys_event.attributes.into_iter().map(Into::into).collect(),
         )
     }
 }
@@ -543,7 +540,7 @@ where
                     &mut attributes,
                     env.contract.address.clone().into_string(),
                 )?;
-                event_handler(Event::new(WASM_MODULE_EVENT_TYPE).add_attributes(attributes));
+                event_handler(Event::new(WASM_MODULE_EVENT_TYPE.into(), attributes));
             }
 
             // https://github.com/CosmWasm/wasmd/blob/ac92fdcf37388cc8dc24535f301f64395f8fb3da/x/wasm/keeper/events.go#L29
@@ -559,10 +556,10 @@ where
                     &mut attributes,
                     env.contract.address.clone().into_string(),
                 )?;
-                event_handler(
-                    Event::new(format!("{}{}", CUSTOM_CONTRACT_EVENT_PREFIX, ty))
-                        .add_attributes(attributes),
-                );
+                event_handler(Event::new(
+                    format!("{}{}", CUSTOM_CONTRACT_EVENT_PREFIX, ty),
+                    attributes,
+                ));
             }
 
             // Fold dispatch over the submessages. If an exception occur and we
@@ -678,7 +675,6 @@ where
                                 update_admin::<V>(vm, &info.sender, vm_contract_addr, None)
                                     .map(|_| None)
                             }
-                            _ => Err(SystemError::UnsupportedMessage.into()),
                         },
                         CosmosMsg::Bank(bank_message) => match bank_message {
                             BankMsg::Send { to_address, amount } => {
@@ -689,7 +685,6 @@ where
                                 vm.burn(&amount)?;
                                 Ok(None)
                             }
-                            _ => Err(SystemError::UnsupportedMessage.into()),
                         },
                         #[cfg(feature = "stargate")]
                         CosmosMsg::Ibc(ibc_message) => match ibc_message {
@@ -714,15 +709,7 @@ where
                                 vm.ibc_close_channel(channel_id)?;
                                 Ok(None)
                             }
-                            _ => Err(SystemError::UnsupportedMessage.into()),
                         },
-                        // TODO(hussein-aitlahcen): determine whether we handle.
-                        #[cfg(feature = "stargate")]
-                        CosmosMsg::Stargate { .. } => Err(SystemError::UnsupportedMessage.into()),
-                        // TODO(hussein-aitlahcen): determine whether we handle.
-                        #[cfg(feature = "stargate")]
-                        CosmosMsg::Gov(_) => Err(SystemError::UnsupportedMessage.into()),
-                        _ => Err(SystemError::UnsupportedMessage.into()),
                     };
 
                     log::debug!("Submessage result: {:?}", sub_res);
@@ -844,7 +831,6 @@ where
                     serialized_info,
                 ))))
             }
-            _ => Err(SystemError::UnsupportedMessage.into()),
         },
         QueryRequest::Wasm(wasm_query) => match wasm_query {
             WasmQuery::Smart {
@@ -874,9 +860,7 @@ where
                     serialized_info,
                 ))))
             }
-            _ => Err(SystemError::UnsupportedMessage.into()),
         },
-        _ => Err(SystemError::UnsupportedMessage.into()),
     }
 }
 

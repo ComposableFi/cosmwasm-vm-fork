@@ -34,7 +34,6 @@
 extern crate alloc;
 
 pub mod code_gen;
-
 #[cfg(test)]
 mod semantic;
 
@@ -45,25 +44,23 @@ use core::{
     num::TryFromIntError,
 };
 #[cfg(feature = "iterator")]
-use cosmwasm_std::Order;
-use cosmwasm_std::{
+use cosmwasm_minimal_std::Order;
+use cosmwasm_minimal_std::{
     Addr, Binary, CanonicalAddr, Coin, ContractInfoResponse, Env, Event, MessageInfo, SystemResult,
 };
-use cosmwasm_vm::{
-    executor::{
-        AllocateInput, AsFunctionName, CosmwasmCallInput, CosmwasmCallWithoutInfoInput,
-        CosmwasmQueryResult, DeallocateInput, ExecutorError, QueryResult, Unit,
-    },
-    has::Has,
-    memory::{
-        MemoryReadError, MemoryWriteError, Pointable, PointerOf, ReadWriteMemory, ReadableMemory,
-        ReadableMemoryErrorOf, WritableMemory, WritableMemoryErrorOf,
-    },
-    system::{CosmwasmContractMeta, SystemError},
-    tagged::Tagged,
-    transaction::{Transactional, TransactionalErrorOf},
-    vm::*,
+use cosmwasm_vm::executor::{
+    AllocateInput, AsFunctionName, CosmwasmCallInput, CosmwasmCallWithoutInfoInput,
+    CosmwasmQueryResult, DeallocateInput, ExecutorError, QueryResult, Unit,
 };
+use cosmwasm_vm::has::Has;
+use cosmwasm_vm::memory::{
+    MemoryReadError, MemoryWriteError, Pointable, PointerOf, ReadWriteMemory, ReadableMemory,
+    ReadableMemoryErrorOf, WritableMemory, WritableMemoryErrorOf,
+};
+use cosmwasm_vm::system::{CosmwasmContractMeta, SystemError};
+use cosmwasm_vm::tagged::Tagged;
+use cosmwasm_vm::transaction::{Transactional, TransactionalErrorOf};
+use cosmwasm_vm::vm::*;
 use either::Either;
 use wasmi::{CanResume, Externals, FuncInstance, ImportResolver, NopExternals, RuntimeValue};
 
@@ -672,7 +669,7 @@ where
         channel_id: String,
         to_address: String,
         amount: Coin,
-        timeout: cosmwasm_std::IbcTimeout,
+        timeout: cosmwasm_minimal_std::ibc::IbcTimeout,
     ) -> Result<(), Self::Error> {
         self.0.charge(VmGas::IbcTransfer)?;
         self.0.ibc_transfer(channel_id, to_address, amount, timeout)
@@ -683,7 +680,7 @@ where
         &mut self,
         channel_id: String,
         data: Binary,
-        timeout: cosmwasm_std::IbcTimeout,
+        timeout: cosmwasm_minimal_std::ibc::IbcTimeout,
     ) -> Result<(), Self::Error> {
         self.0.charge(VmGas::IbcSendPacket)?;
         self.0.ibc_send_packet(channel_id, data, timeout)
@@ -828,8 +825,8 @@ pub fn decode_sections(data: &[u8]) -> Vec<&[u8]> {
 pub mod host_functions {
     use super::*;
     #[cfg(feature = "iterator")]
-    use cosmwasm_std::Order;
-    use cosmwasm_std::QueryRequest;
+    use cosmwasm_minimal_std::Order;
+    use cosmwasm_minimal_std::QueryRequest;
     use cosmwasm_vm::{
         executor::{
             constants, marshall_out, passthrough_in, passthrough_in_to, passthrough_out,
